@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+
     @Autonomous(name = "LinearAuto")
     public class LearningAutonomousJunk extends LinearOpMode{
 
@@ -25,7 +26,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
             int roundedTarget = (int) target;
 
             intakeSliderBase.setTargetPosition(roundedTarget);
-            intakeSliderBase.setPower(0.5); 
+            intakeSliderBase.setPower(0.5);
         }
 
         // Functions for Movement
@@ -59,9 +60,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
         }
 
         void armGoesUp() {
+        void flightOfBee() {
             armBase.setPower(1);
         }
         void noMoreHighArm() {
+        void deathOfBee() {
             armBase.setPower(-1);
             sleep(800);
             armBase.setPower(0);
