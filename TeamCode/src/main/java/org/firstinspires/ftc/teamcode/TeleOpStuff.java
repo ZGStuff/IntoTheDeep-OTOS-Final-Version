@@ -22,9 +22,10 @@ import com.qualcomm.robotcore.hardware.Servo;
         private DcMotor armBase;
         private DcMotor intakeSliderBase;
         // private ColorSensor colSense;
-        private CRServo theServo;
-        private Servo theUpAndDownServo;
+        private CRServo intakeServo1;
+        private CRServo intakeServo2;
         private Servo rotaenoWha;
+        private Servo intakeServo3;
         private Servo bucket;
         private Servo specimenEater;
         private DcMotor varmClaw;
@@ -41,14 +42,16 @@ import com.qualcomm.robotcore.hardware.Servo;
             armBase = hardwareMap.get(DcMotor.class, "armBase");
             intakeSliderBase = hardwareMap.get(DcMotor.class, "intakeSliderBase");
 //            colSense = hardwareMap.get(ColorSensor.class, "colSense");
-            theServo = hardwareMap.get(CRServo.class, "theServo");
-            theUpAndDownServo = hardwareMap.get(Servo.class, "theUpAndDownServo");
+            intakeServo1 = hardwareMap.get(CRServo.class, "intakeServo1");
+            intakeServo2 = hardwareMap.get(CRServo.class, "intakeServo2");
             rotaenoWha = hardwareMap.get(Servo.class, "rotaenoWha");
+            intakeServo3 = hardwareMap.get(Servo.class, "intakeServoTheThird");
             bucket = hardwareMap.get(Servo.class,"bucket");
             specimenEater = hardwareMap.get(Servo.class, "specimenEater");
             //varmClaw = hardwareMap.get(DcMotor.class, "varmClaw");
             intakeSliderBase.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             intakeSliderBase.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            armBase.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             // Variables
             double ticks = 	537.7;
             int currentPos = armBase.getCurrentPosition();
@@ -58,7 +61,7 @@ import com.qualcomm.robotcore.hardware.Servo;
             // Put initialization blocks here.
 //            frontLeft.setDirection(DcMotor.Direction.REVERSE);
 //            backLeft.setDirection(DcMotor.Direction.REVERSE);
-            armBase.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            armBase.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
 
 
@@ -73,6 +76,7 @@ import com.qualcomm.robotcore.hardware.Servo;
                 double rightBackPower;
                 otherPos = intakeSliderBase.getCurrentPosition();
                 telemetry.addData("encoder position of the intake!!!!", otherPos);
+                telemetry.addData("LiftPos: ", armBase.getCurrentPosition());
                 telemetry.update();
                 // Gamepad movement code
                 double drive = -gamepad1.left_stick_y;
@@ -103,13 +107,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 
                //  Gamepad 2 intake servo movement code
                 if (gamepad2.left_bumper) {
-                    theServo.setPower(0.5);
+                    intakeServo1.setPower(0.5);
+                    intakeServo2.setPower(-0.5);
                 }
                 else if (gamepad2.right_bumper) {
-                    theServo.setPower(-0.75);
+                    intakeServo1.setPower(-0.75);
+                    intakeServo2.setPower(0.75);
                 }
                 else {
-                    theServo.setPower(0);
+                    intakeServo1.setPower(0);
                 }
                // Gamepad 2 v-arm slider movement code
                 if (gamepad2.dpad_up) {
@@ -126,12 +132,8 @@ import com.qualcomm.robotcore.hardware.Servo;
                // GP2 intake servo code part 2
                if (gamepad2.x) {
                    rotaenoWha.setPosition(0);
-                   sleep(250);
-                   theUpAndDownServo.setPosition(1);
                } else if (gamepad2.y) {
                    rotaenoWha.setPosition(1);
-                   sleep(250);
-                   theUpAndDownServo.setPosition(0.5);
                }
 
                // Gamepad 2 intake slider movement code

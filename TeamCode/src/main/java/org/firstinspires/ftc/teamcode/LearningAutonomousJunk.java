@@ -60,11 +60,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
         }
 
         void armGoesUp() {
-        void flightOfBee() {
             armBase.setPower(1);
         }
         void noMoreHighArm() {
-        void deathOfBee() {
             armBase.setPower(-1);
             sleep(800);
             armBase.setPower(0);

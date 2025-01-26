@@ -2,33 +2,30 @@ package org.firstinspires.ftc.teamcode;
 
 
 // RR-specific imports
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
-
-// Non-RR imports
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @Config
-@Autonomous(name = "AutoRR", group = "Autonomous")
+@Autonomous(name = "HighBasketRR", group = "Autonomous")
 
 
-public class AutoRR extends LinearOpMode {
+public class HiBasketRR extends LinearOpMode {
     // armBase class
     public class Lift {
         private DcMotorEx armBase;
@@ -137,7 +134,7 @@ public class AutoRR extends LinearOpMode {
         public Bucket(HardwareMap hardwareMap) {
             bucket = hardwareMap.get(Servo.class, "bucket");
         }
-        // within the Bucket class
+        // within the Claw class
         public class RaiseBucket implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
@@ -178,43 +175,8 @@ public class AutoRR extends LinearOpMode {
 //                .turn(Math.toRadians(180))
 //        .lineToX(-24)
 //                .turn(Math.toRadians(180));
-                .afterTime(0, drive.SetBucketPos(0.5))
-                .splineTo(new Vector2d(52,57), Math.toRadians(-45))
-                .afterTime(0, drive.SetLiftTarget(-4370))
-                .waitSeconds(2)
-                .setTangent(0)
-                .splineToLinearHeading(new Pose2d(59.5,63, Math.toRadians(-67.5)), Math.toRadians(67.5))
-                .afterTime(1, drive.SetBucketPos(1))
-                .afterTime(2, drive.SetBucketPos(0.5));
-
-
-
-//
-//
-//                .setTangent(0)
-//
-//                .splineToLinearHeading(new Pose2d(59.5, 63, Math.toRadians(-67.5)), Math.toRadians(67.5));
-        //.setTangent(0)
-//                .splineToSplineHeading(new Pose2d(37, 28, Math.toRadians(0)), Math.toRadians(270))
-//                .splineToSplineHeading(new Pose2d(41, 10, Math.toRadians(0)), Math.toRadians(90))
-//                .waitSeconds(0.5)
-//                .strafeTo(new Vector2d(41, 62.5))
-//                .strafeTo(new Vector2d(41, 10))
-//                .setTangent(0)
-//                .splineTo(new Vector2d(55, 10), Math.toRadians(0))
-//                .strafeTo(new Vector2d(55, 62.5))
-//                .strafeTo(new Vector2d(55, 10))
-//                .setTangent(0)
-//                .splineTo(new Vector2d(65, 10), Math.toRadians(0))
-//                .strafeTo(new Vector2d(65, 58))
-//                .setTangent(Math.toRadians(180))
-//                .splineToSplineHeading(new Pose2d(0, 38, Math.toRadians(270)), Math.toRadians(180))
-//                .splineToSplineHeading(new Pose2d(-42, 56, Math.toRadians(180)), Math.toRadians(180));
-        Action tab1Action = tab1.build();
-        TrajectoryActionBuilder traj2 = tab1.endTrajectory().fresh()
-                .strafeTo(new Vector2d(51.5, 51));
-        Action trajectory2 = traj2.build();
-        TrajectoryActionBuilder traj3 = traj2.endTrajectory().fresh()
+        .splineTo(new Vector2d(52,57), Math.toRadians(-45))
+                .waitSeconds(5)
                 .setTangent(0)
                 .splineToSplineHeading(new Pose2d(36, 24, Math.toRadians(0)), Math.toRadians(270))
                 .splineToSplineHeading(new Pose2d(46, 10, Math.toRadians(0)), Math.toRadians(90))
@@ -230,7 +192,7 @@ public class AutoRR extends LinearOpMode {
                 .setTangent(Math.toRadians(180))
                 .splineToSplineHeading(new Pose2d(0, 38, Math.toRadians(270)), Math.toRadians(180))
                 .splineToSplineHeading(new Pose2d(-52, 56, Math.toRadians(180)), Math.toRadians(180));
-        Action trajectory3 = traj3.build();
+        Action tab1Action = tab1.build();
         while (!isStopRequested() && !opModeIsActive()) {
             int position = visionOutputPosition;
             telemetry.addData("Position during Init", position);
@@ -254,41 +216,12 @@ public class AutoRR extends LinearOpMode {
 //                        trajectoryActionChosen,
 //                        trajectoryActionCloseOut
 //                )
-        new SequentialAction(
-                new ParallelAction(
-                        drive.LiftLoop(),
-                        drive.BucketLoopAction(),
-                        tab1Action
-                        //lift.liftUp()
-                ),
-
-                trajectory2,
-                drive.SetLiftTarget(0),
-                        new ParallelAction(
-                                drive.LiftLoop(),
-                                trajectory3
-
+                new SequentialAction(
+//                        tab1Action,
+//                        lift.liftUp()
                 )
-        )
-
-
 
         );
-        // bucket.bucket.setPosition(1);
-//        Actions.runBlocking(
-//                new SleepAction(2)
-//        );
-//        bucket.bucket.setPosition(0.5);
-//        Actions.runBlocking(
-//                new SequentialAction(
-//                        trajectory2,
-//                        drive.SetLiftTarget(0),
-//                        new ParallelAction(
-//                            drive.LiftLoop(),
-//                            trajectory3
-//                        )
-//                )
-//        );
     }
     
 }

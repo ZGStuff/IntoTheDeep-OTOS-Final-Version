@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -89,6 +90,9 @@ public class MecanumDrive {
         public double axialVelGain = 0.0;
         public double lateralVelGain = 0.0;
         public double headingVelGain = 0.0; // shared with turn
+
+        public int slideTargetPos = 0;
+        public double bucketTargetPos = 0.5;
     }
 
     public static Params PARAMS = new Params();
@@ -106,7 +110,9 @@ public class MecanumDrive {
     public final AccelConstraint defaultAccelConstraint =
             new ProfileAccelConstraint(PARAMS.minProfileAccel, PARAMS.maxProfileAccel);
 
-    public final DcMotorEx leftFront, leftBack, rightBack, rightFront;
+    public final DcMotorEx leftFront, leftBack, rightBack, rightFront, vArmBase;
+
+    public final Servo bucket;
 
     public final VoltageSensor voltageSensor;
 
@@ -222,6 +228,11 @@ public class MecanumDrive {
         leftBack = hardwareMap.get(DcMotorEx.class, "backLeft");
         rightBack = hardwareMap.get(DcMotorEx.class, "backRight");
         rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
+        vArmBase = hardwareMap.get(DcMotorEx.class, "armBase");
+        bucket = hardwareMap.get(Servo.class, "bucket");
+        vArmBase.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        vArmBase.setTargetPosition(PARAMS.slideTargetPos);
+        vArmBase.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -361,6 +372,38 @@ public class MecanumDrive {
             c.setStrokeWidth(1);
             c.strokePolyline(xPoints, yPoints);
         }
+    }
+
+    public class BucketLoop implements Action {
+        @Override
+        public boolean run (@NonNull TelemetryPacket p) {
+            bucket.setPosition(PARAMS.bucketTargetPos);
+            return true;
+        }
+    }
+
+    public class LiftUpLoop implements Action {
+        @Override
+        public boolean run (@NonNull TelemetryPacket p) {
+            vArmBase.setTargetPosition(PARAMS.slideTargetPos);
+            vArmBase.setPower(1);
+            return true;
+        }
+    }
+    public Action BucketLoopAction() {
+        return new BucketLoop();
+    }
+
+    public Action SetBucketPos (double bucketPos) {
+        return new InstantAction(() -> PARAMS.bucketTargetPos = bucketPos);
+    }
+
+    public Action LiftLoop() {
+        return new LiftUpLoop();
+    }
+
+    public Action SetLiftTarget(int targetPos) {
+        return new InstantAction(() -> PARAMS.slideTargetPos = targetPos);
     }
 
     public final class TurnAction implements Action {
