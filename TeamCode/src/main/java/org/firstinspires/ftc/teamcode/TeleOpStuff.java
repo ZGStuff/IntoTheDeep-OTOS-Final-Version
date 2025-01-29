@@ -25,7 +25,7 @@ import com.qualcomm.robotcore.hardware.Servo;
         private CRServo intakeServo1;
         private CRServo intakeServo2;
         private Servo rotaenoWha;
-        private Servo intakeServo3;
+        private DcMotor intakeServo3;
         private Servo bucket;
         private Servo specimenEater;
         private DcMotor varmClaw;
@@ -42,15 +42,16 @@ import com.qualcomm.robotcore.hardware.Servo;
             armBase = hardwareMap.get(DcMotor.class, "armBase");
             intakeSliderBase = hardwareMap.get(DcMotor.class, "intakeSliderBase");
 //            colSense = hardwareMap.get(ColorSensor.class, "colSense");
-            intakeServo1 = hardwareMap.get(CRServo.class, "intakeServo1");
-            intakeServo2 = hardwareMap.get(CRServo.class, "intakeServo2");
+            intakeServo1 = hardwareMap.get(CRServo.class, "theServo");
+            intakeServo2 = hardwareMap.get(CRServo.class, "theUpAndDownServo");
             rotaenoWha = hardwareMap.get(Servo.class, "rotaenoWha");
-            intakeServo3 = hardwareMap.get(Servo.class, "intakeServoTheThird");
+            intakeServo3 = hardwareMap.get(DcMotor.class, "intakeMotor3");
             bucket = hardwareMap.get(Servo.class,"bucket");
             specimenEater = hardwareMap.get(Servo.class, "specimenEater");
             //varmClaw = hardwareMap.get(DcMotor.class, "varmClaw");
             intakeSliderBase.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             intakeSliderBase.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            intakeServo3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             armBase.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             // Variables
             double ticks = 	537.7;
@@ -76,6 +77,7 @@ import com.qualcomm.robotcore.hardware.Servo;
                 double rightBackPower;
                 otherPos = intakeSliderBase.getCurrentPosition();
                 telemetry.addData("encoder position of the intake!!!!", otherPos);
+                telemetry.addData("intake motor 2 pos", intakeServo3.getCurrentPosition());
                 telemetry.addData("LiftPos: ", armBase.getCurrentPosition());
                 telemetry.update();
                 // Gamepad movement code
@@ -116,6 +118,7 @@ import com.qualcomm.robotcore.hardware.Servo;
                 }
                 else {
                     intakeServo1.setPower(0);
+                    intakeServo2.setPower(0);
                 }
                // Gamepad 2 v-arm slider movement code
                 if (gamepad2.dpad_up) {
@@ -131,11 +134,20 @@ import com.qualcomm.robotcore.hardware.Servo;
                 }
                // GP2 intake servo code part 2
                if (gamepad2.x) {
-                   rotaenoWha.setPosition(0);
+                   rotaenoWha.setPosition(0.5);
                } else if (gamepad2.y) {
                    rotaenoWha.setPosition(1);
                }
-
+               // gp2 intake servo code the third
+                if (gamepad2.a) {
+                    intakeServo3.setTargetPosition(306);
+                    intakeServo3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    intakeServo3.setPower(0.1);
+                } else if (gamepad2.b) {
+                    intakeServo3.setTargetPosition(0);
+                    intakeServo3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    intakeServo3.setPower(0.1);
+                }
                // Gamepad 2 intake slider movement code
                 if (gamepad2.dpad_right) {
                     if (otherPos > -2610) {
@@ -150,11 +162,11 @@ import com.qualcomm.robotcore.hardware.Servo;
                 }
                 
                 // INTAKE ROTATE-O-TRON GOOOOOOOO
-                if (gamepad2.right_trigger > 0.5){
-                    rotaenoWha.setPosition(0);
-                } else if (gamepad2.left_trigger > 0.5){
-                    rotaenoWha.setPosition(1);
-                }
+//                if (gamepad2.right_trigger > 0.5){
+//                    rotaenoWha.setPosition(0);
+//                } else if (gamepad2.left_trigger > 0.5){
+//                    rotaenoWha.setPosition(1);
+//                }
 
                 // bucket code go brrrrrr (gamepad 1)
                 if (gamepad1.a) {
