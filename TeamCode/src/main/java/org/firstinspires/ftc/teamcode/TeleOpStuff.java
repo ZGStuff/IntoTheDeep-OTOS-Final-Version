@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.hardware.Servo;
             //varmClaw = hardwareMap.get(DcMotor.class, "varmClaw");
             intakeSliderBase.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             intakeSliderBase.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//            intakeServo3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            intakeServo3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             armBase.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             // Variables
             double ticks = 	537.7;
@@ -63,6 +63,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 //            frontLeft.setDirection(DcMotor.Direction.REVERSE);
 //            backLeft.setDirection(DcMotor.Direction.REVERSE);
             armBase.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            intakeServo3.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
 
@@ -140,22 +141,22 @@ import com.qualcomm.robotcore.hardware.Servo;
                }
                // gp2 intake servo code the third
                 if (gamepad2.a) {
-                    intakeServo3.setTargetPosition(306);
+                    intakeServo3.setTargetPosition(337);
                     intakeServo3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    intakeServo3.setPower(0.1);
+                    intakeServo3.setPower(0.5);
                 } else if (gamepad2.b) {
                     intakeServo3.setTargetPosition(0);
                     intakeServo3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    intakeServo3.setPower(0.1);
+                    intakeServo3.setPower(0.5);
                 }
                // Gamepad 2 intake slider movement code
                 if (gamepad2.dpad_right) {
                     if (otherPos > -2610) {
-                        intakeSliderBase.setPower(0.5);
+                        intakeSliderBase.setPower(0.8);
                     }
                 } else if (gamepad2.dpad_left) {
                     if (otherPos < 1) {
-                        intakeSliderBase.setPower(-0.5);
+                        intakeSliderBase.setPower(-0.8);
                     }
                 } else {
                     intakeSliderBase.setPower(0);
