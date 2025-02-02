@@ -141,7 +141,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 //               }
                // gp2 intake servo code the third
                 if (gamepad2.a) {
-                    intakeServo3.setTargetPosition(-1162);
+                    intakeServo3.setTargetPosition(-1167);
                     intakeServo3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     intakeServo3.setPower(0.5);
                 } else if (gamepad2.b) {

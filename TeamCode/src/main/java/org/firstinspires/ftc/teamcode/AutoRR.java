@@ -180,12 +180,31 @@ public class AutoRR extends LinearOpMode {
 //                .turn(Math.toRadians(180));
                 .afterTime(0, drive.SetBucketPos(0.5))
                 .splineTo(new Vector2d(52,57), Math.toRadians(-45))
-                .afterTime(0, drive.SetLiftTarget(-4370))
+                .afterTime(0, drive.SetLiftTarget(-4385))
                 .waitSeconds(2)
                 .setTangent(0)
                 .splineToLinearHeading(new Pose2d(59.5,63, Math.toRadians(-67.5)), Math.toRadians(67.5))
                 .afterTime(1, drive.SetBucketPos(1))
-                .afterTime(2, drive.SetBucketPos(0.5));
+                .afterTime(2, drive.SetBucketPos(0.5))
+                .waitSeconds(1)
+                .strafeTo(new Vector2d(51.5, 51))
+                .afterTime(0.5, drive.SetLiftTarget(0))
+                .setTangent(0)
+                .splineToSplineHeading(new Pose2d(36, 24, Math.toRadians(0)), Math.toRadians(270))
+                .splineToSplineHeading(new Pose2d(46, 10, Math.toRadians(0)), Math.toRadians(90))
+                .waitSeconds(0.5)
+                .strafeTo(new Vector2d(46, 61))
+                .strafeTo(new Vector2d(46, 10))
+                .setTangent(0)
+                .splineTo(new Vector2d(55, 10), Math.toRadians(0))
+                .strafeTo(new Vector2d(55, 60))
+                .strafeTo(new Vector2d(55, 10))
+                .setTangent(0)
+                .splineTo(new Vector2d(65, 10), Math.toRadians(0))
+                .strafeTo(new Vector2d(65, 60))
+                .setTangent(Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(0, 38, Math.toRadians(270)), Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(-52, 56, Math.toRadians(180)), Math.toRadians(180));
 
 
 
@@ -260,15 +279,15 @@ public class AutoRR extends LinearOpMode {
                         drive.BucketLoopAction(),
                         tab1Action
                         //lift.liftUp()
-                ),
-
-                trajectory2,
-                drive.SetLiftTarget(0),
-                        new ParallelAction(
-                                drive.LiftLoop(),
-                                trajectory3
-
                 )
+
+//                trajectory2,
+////                drive.SetLiftTarget(0),
+//                        new ParallelAction(
+//                                drive.LiftLoop(),
+//                                trajectory3
+//
+//                )
         )
 
 
