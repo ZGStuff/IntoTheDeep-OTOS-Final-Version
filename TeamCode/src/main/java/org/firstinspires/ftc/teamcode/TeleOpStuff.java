@@ -123,11 +123,11 @@ import com.qualcomm.robotcore.hardware.Servo;
                 }
                // Gamepad 2 v-arm slider movement code
                 if (gamepad2.dpad_up) {
-                    if (currentPos < 1) {
+                    if (currentPos > 1) {
                         armBase.setPower(-0.85);
                     }
                 } else if (gamepad2.dpad_down) {
-                    if (currentPos < 1) {
+                    if (currentPos > 1) {
                         armBase.setPower(0.85);
                     }
                 } else {
@@ -141,7 +141,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 //               }
                // gp2 intake servo code the third
                 if (gamepad2.a) {
-                    intakeServo3.setTargetPosition(-1155);
+                    intakeServo3.setTargetPosition(-1162);
                     intakeServo3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     intakeServo3.setPower(0.5);
                 } else if (gamepad2.b) {
