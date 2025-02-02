@@ -2,33 +2,31 @@ package org.firstinspires.ftc.teamcode;
 
 
 // RR-specific imports
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
-
-// Non-RR imports
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @Config
 @Autonomous(name = "AutoRR-HB-SR", group = "Autonomous")
 
 
-public class AutoRR extends LinearOpMode {
+public class SpecimenRR extends LinearOpMode {
     // armBase class
     public class Lift {
         private DcMotorEx armBase;
@@ -161,7 +159,7 @@ public class AutoRR extends LinearOpMode {
         }
     }
     public void runOpMode() {
-        Pose2d initialPose = new Pose2d(32.75, 63.25, Math.toRadians(0));
+        Pose2d initialPose = new Pose2d(-20, 63.25, Math.toRadians(270));
         SparkFunOTOSDrive drive = new SparkFunOTOSDrive(hardwareMap, initialPose);
 
         // make a Claw instance
@@ -178,33 +176,13 @@ public class AutoRR extends LinearOpMode {
 //                .turn(Math.toRadians(180))
 //        .lineToX(-24)
 //                .turn(Math.toRadians(180));
-                .afterTime(0, drive.SetBucketPos(0.5))
-                .splineTo(new Vector2d(52,57), Math.toRadians(-45))
-                .afterTime(0, drive.SetLiftTarget(-4385))
-                .waitSeconds(2)
-                .setTangent(0)
-                .splineToLinearHeading(new Pose2d(59.5,63, Math.toRadians(-67.5)), Math.toRadians(67.5))
-                .afterTime(1, drive.SetBucketPos(1))
-                .afterTime(1.5, drive.SetBucketPos(0.5))
-                .waitSeconds(1.5)
-                .strafeTo(new Vector2d(51.5, 51))
-                .afterTime(0.5, drive.SetLiftTarget(0))
-                .setTangent(0)
-                .splineToSplineHeading(new Pose2d(36, 24, Math.toRadians(0)), Math.toRadians(270))
-                .splineToSplineHeading(new Pose2d(46, 10, Math.toRadians(0)), Math.toRadians(90))
-                .waitSeconds(0.5)
-                .strafeTo(new Vector2d(46, 61))
-                .strafeTo(new Vector2d(46, 10))
-                .setTangent(0)
-                .splineTo(new Vector2d(55, 10), Math.toRadians(0))
-                .strafeTo(new Vector2d(55, 60))
-                .strafeTo(new Vector2d(55, 10))
-                .setTangent(0)
-                .splineTo(new Vector2d(65, 10), Math.toRadians(0))
-                .strafeTo(new Vector2d(65, 60))
-                .setTangent(Math.toRadians(180))
-                .splineToSplineHeading(new Pose2d(0, 38, Math.toRadians(270)), Math.toRadians(180))
-                .splineToSplineHeading(new Pose2d(-52, 56, Math.toRadians(180)), Math.toRadians(180));
+                .splineTo(new Vector2d(0, 34), Math.toRadians(270))
+                .strafeTo(new Vector2d(-52, 60))
+                .strafeTo(new Vector2d(0, 34))
+                .strafeTo(new Vector2d(-52, 60))
+                .strafeTo(new Vector2d(0, 34))
+                .strafeTo(new Vector2d(-52, 60))
+                .strafeTo(new Vector2d(0, 34));
 
 
 

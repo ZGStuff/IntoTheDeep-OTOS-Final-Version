@@ -62,7 +62,7 @@ import com.qualcomm.robotcore.hardware.Servo;
             // Put initialization blocks here.
             frontLeft.setDirection(DcMotor.Direction.REVERSE);
             backLeft.setDirection(DcMotor.Direction.REVERSE);
-            armBase.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            armBase.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             intakeServo3.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
@@ -76,6 +76,7 @@ import com.qualcomm.robotcore.hardware.Servo;
                 double rightFrontPower;
                 double leftBackPower;
                 double rightBackPower;
+                currentPos = armBase.getCurrentPosition();
                 otherPos = intakeSliderBase.getCurrentPosition();
                 telemetry.addData("encoder position of the intake!!!!", otherPos);
                 telemetry.addData("intake motor 2 pos", intakeServo3.getCurrentPosition());
@@ -122,17 +123,30 @@ import com.qualcomm.robotcore.hardware.Servo;
                     intakeServo2.setPower(0);
                 }
                // Gamepad 2 v-arm slider movement code
+                // up
                 if (gamepad2.dpad_up) {
-                    if (currentPos > 1) {
-                        armBase.setPower(-0.85);
+                    if (currentPos > -4370) {
+                        armBase.setPower(-0.8);
                     }
+                // down
                 } else if (gamepad2.dpad_down) {
-                    if (currentPos > 1) {
-                        armBase.setPower(0.85);
+                    if (currentPos < 1) {
+                        armBase.setPower(0.8);
                     }
                 } else {
                     armBase.setPower(0);
                 }
+//                if (gamepad2.dpad_up) {
+//                    if (currentPos < 1) {
+//                        armBase.setPower(0.85);
+//                    }
+//                } else if (gamepad2.dpad_down) {
+//                    if (currentPos > 1) {
+//                        armBase.setPower(-0.85);
+//                    }
+//                } else {
+//                    armBase.setPower(0);
+//                }
                // GP2 intake servo code part 2
 //               if (gamepad2.x) {
 //                   rotaenoWha.setPosition(0.5);

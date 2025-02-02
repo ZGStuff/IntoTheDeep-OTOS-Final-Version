@@ -2,33 +2,31 @@ package org.firstinspires.ftc.teamcode;
 
 
 // RR-specific imports
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
-
-// Non-RR imports
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @Config
-@Autonomous(name = "AutoRR-HB-SR", group = "Autonomous")
+@Autonomous(name = "AutoRR-HB-NR", group = "Autonomous")
 
 
-public class AutoRR extends LinearOpMode {
+public class AutoRR_HB_NR extends LinearOpMode {
     // armBase class
     public class Lift {
         private DcMotorEx armBase;
@@ -202,10 +200,8 @@ public class AutoRR extends LinearOpMode {
                 .setTangent(0)
                 .splineTo(new Vector2d(65, 10), Math.toRadians(0))
                 .strafeTo(new Vector2d(65, 60))
-                .setTangent(Math.toRadians(180))
-                .splineToSplineHeading(new Pose2d(0, 38, Math.toRadians(270)), Math.toRadians(180))
-                .splineToSplineHeading(new Pose2d(-52, 56, Math.toRadians(180)), Math.toRadians(180));
-
+                .setTangent(0)
+                .lineToX(-52);
 
 
 //
