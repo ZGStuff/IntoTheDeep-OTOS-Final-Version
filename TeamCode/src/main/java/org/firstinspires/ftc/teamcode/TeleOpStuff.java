@@ -60,8 +60,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
             // Put initialization blocks here.
-//            frontLeft.setDirection(DcMotor.Direction.REVERSE);
-//            backLeft.setDirection(DcMotor.Direction.REVERSE);
+            frontLeft.setDirection(DcMotor.Direction.REVERSE);
+            backLeft.setDirection(DcMotor.Direction.REVERSE);
             armBase.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             intakeServo3.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -110,8 +110,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
                //  Gamepad 2 intake servo movement code
                 if (gamepad2.left_bumper) {
-                    intakeServo1.setPower(0.5);
-                    intakeServo2.setPower(-0.5);
+                    intakeServo1.setPower(0.75);
+                    intakeServo2.setPower(-0.75);
                 }
                 else if (gamepad2.right_bumper) {
                     intakeServo1.setPower(-0.75);
@@ -134,14 +134,14 @@ import com.qualcomm.robotcore.hardware.Servo;
                     armBase.setPower(0);
                 }
                // GP2 intake servo code part 2
-               if (gamepad2.x) {
-                   rotaenoWha.setPosition(0.5);
-               } else if (gamepad2.y) {
-                   rotaenoWha.setPosition(1);
-               }
+//               if (gamepad2.x) {
+//                   rotaenoWha.setPosition(0.5);
+//               } else if (gamepad2.y) {
+//                   rotaenoWha.setPosition(1);
+//               }
                // gp2 intake servo code the third
                 if (gamepad2.a) {
-                    intakeServo3.setTargetPosition(337);
+                    intakeServo3.setTargetPosition(-1155);
                     intakeServo3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     intakeServo3.setPower(0.5);
                 } else if (gamepad2.b) {
