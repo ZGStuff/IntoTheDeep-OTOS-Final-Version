@@ -23,7 +23,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
-@Autonomous(name = "AutoRR-HB-SR", group = "Autonomous")
+@Autonomous(name = "AutoRR-TripleSpecimenA", group = "Autonomous")
 
 
 public class SpecimenRR extends LinearOpMode {
@@ -109,7 +109,7 @@ public class SpecimenRR extends LinearOpMode {
         public class CloseClaw implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                specimenEater.setPosition(0.55);
+                specimenEater.setPosition(0);
                 return false;
             }
         }
@@ -159,7 +159,7 @@ public class SpecimenRR extends LinearOpMode {
         }
     }
     public void runOpMode() {
-        Pose2d initialPose = new Pose2d(-20, 63.25, Math.toRadians(270));
+        Pose2d initialPose = new Pose2d(-21, 61, Math.toRadians(90));
         SparkFunOTOSDrive drive = new SparkFunOTOSDrive(hardwareMap, initialPose);
 
         // make a Claw instance
@@ -171,62 +171,61 @@ public class SpecimenRR extends LinearOpMode {
         int visionOutputPosition = 1;
         // actionBuilder builds from the drive steps passed to it
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
-//                .waitSeconds(5)
-//                .strafeTo(new Vector2d(-34, 50));
-//                .turn(Math.toRadians(180))
-//        .lineToX(-24)
-//                .turn(Math.toRadians(180));
-                .splineTo(new Vector2d(0, 34), Math.toRadians(270))
-                .strafeTo(new Vector2d(-52, 60))
-                .strafeTo(new Vector2d(0, 34))
-                .strafeTo(new Vector2d(-52, 60))
-                .strafeTo(new Vector2d(0, 34))
-                .strafeTo(new Vector2d(-52, 60))
-                .strafeTo(new Vector2d(0, 34));
+                // raises arm, moves to bar and closes claw
+                .setTangent(Math.toRadians(0))
+                .afterTime(0, drive.SetLiftTarget(-1968))
+                .afterTime(0, claw.closeClaw())
+                .splineToLinearHeading(new Pose2d(3.9, 30, Math.toRadians(90)), Math.toRadians(270))
+                // hangs specimen and opens claw
+                .afterTime(0.5, drive.SetLiftTarget(-1328))
+                .afterTime(1, claw.openClaw())
+                .afterTime(2, drive.SetLiftTarget(0))
+                .waitSeconds(2.5)
+                .setTangent(Math.toRadians(180))
+                // splines to samples and pushes one
+                .splineTo(new Vector2d(-18, 40), Math.toRadians(180))
+                .splineTo(new Vector2d(-32, 30), Math.toRadians(270))
+                .setTangent(Math.toRadians(270))
+                .splineToLinearHeading(new Pose2d(-42.1, 23, Math.toRadians(180)), Math.toRadians(180))
+                .setTangent(Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-55, 59, Math.toRadians(180)), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-34, 56, Math.toRadians(180)), Math.toRadians(0))
+                .setTangent(Math.toRadians(270))
+                .splineToLinearHeading(new Pose2d(-52, 23, Math.toRadians(180)), Math.toRadians(180))
+                .setTangent(Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-55, 59, Math.toRadians(180)), Math.toRadians(90))
+                // pushes sample number 2 into position
+                .splineToLinearHeading(new Pose2d(-34, 56, Math.toRadians(180)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-45, 59, Math.toRadians(270)), Math.toRadians(90))
+                .afterTime(0.5, claw.closeClaw())
+                .afterTime(1, drive.SetLiftTarget(-1968))
+                .waitSeconds(1.5)
+                .setTangent(0)
+                .splineToLinearHeading(new Pose2d(0, 29.5, Math.toRadians(90)), Math.toRadians(270))
+                .afterTime(0.5, drive.SetLiftTarget(-1328))
+                .afterTime(1, claw.openClaw())
+                .waitSeconds(2)
+                .afterTime(0, drive.SetLiftTarget(0))
+                .splineToSplineHeading(new Pose2d(-45, 59, Math.toRadians(270)), Math.toRadians(180))
+                .afterTime(0.5, claw.closeClaw())
+                .afterTime(1, drive.SetLiftTarget(-1968))
+                .waitSeconds(1.5)
+                .setTangent(0)
+                .splineToLinearHeading(new Pose2d(-4, 29.5, Math.toRadians(90)), Math.toRadians(270))
+                .afterTime(0.5, drive.SetLiftTarget(-1328))
+                .afterTime(1, claw.openClaw())
+                .waitSeconds(2)
+                .afterTime(0, drive.SetLiftTarget(0))
+                .splineToSplineHeading(new Pose2d(-45, 59, Math.toRadians(270)), Math.toRadians(180));
 
 
 
-//
-//
-//                .setTangent(0)
-//
-//                .splineToLinearHeading(new Pose2d(59.5, 63, Math.toRadians(-67.5)), Math.toRadians(67.5));
-        //.setTangent(0)
-//                .splineToSplineHeading(new Pose2d(37, 28, Math.toRadians(0)), Math.toRadians(270))
-//                .splineToSplineHeading(new Pose2d(41, 10, Math.toRadians(0)), Math.toRadians(90))
-//                .waitSeconds(0.5)
-//                .strafeTo(new Vector2d(41, 62.5))
-//                .strafeTo(new Vector2d(41, 10))
-//                .setTangent(0)
-//                .splineTo(new Vector2d(55, 10), Math.toRadians(0))
-//                .strafeTo(new Vector2d(55, 62.5))
-//                .strafeTo(new Vector2d(55, 10))
-//                .setTangent(0)
-//                .splineTo(new Vector2d(65, 10), Math.toRadians(0))
-//                .strafeTo(new Vector2d(65, 58))
-//                .setTangent(Math.toRadians(180))
-//                .splineToSplineHeading(new Pose2d(0, 38, Math.toRadians(270)), Math.toRadians(180))
-//                .splineToSplineHeading(new Pose2d(-42, 56, Math.toRadians(180)), Math.toRadians(180));
+
         Action tab1Action = tab1.build();
         TrajectoryActionBuilder traj2 = tab1.endTrajectory().fresh()
                 .strafeTo(new Vector2d(51.5, 51));
         Action trajectory2 = traj2.build();
-        TrajectoryActionBuilder traj3 = traj2.endTrajectory().fresh()
-                .setTangent(0)
-                .splineToSplineHeading(new Pose2d(36, 24, Math.toRadians(0)), Math.toRadians(270))
-                .splineToSplineHeading(new Pose2d(46, 10, Math.toRadians(0)), Math.toRadians(90))
-                .strafeTo(new Vector2d(46, 56))
-                .strafeTo(new Vector2d(46, 10))
-                .setTangent(0)
-                .splineTo(new Vector2d(55, 10), Math.toRadians(0))
-                .strafeTo(new Vector2d(55, 56))
-                .strafeTo(new Vector2d(55, 10))
-                .setTangent(0)
-                .splineTo(new Vector2d(62, 10), Math.toRadians(0))
-                .strafeTo(new Vector2d(62, 56))
-                .setTangent(Math.toRadians(180))
-                .splineToSplineHeading(new Pose2d(0, 38, Math.toRadians(270)), Math.toRadians(180))
-                .splineToSplineHeading(new Pose2d(-52, 56, Math.toRadians(180)), Math.toRadians(180));
+        TrajectoryActionBuilder traj3 = traj2.endTrajectory().fresh();
         Action trajectory3 = traj3.build();
         while (!isStopRequested() && !opModeIsActive()) {
             int position = visionOutputPosition;
@@ -254,38 +253,14 @@ public class SpecimenRR extends LinearOpMode {
         new SequentialAction(
                 new ParallelAction(
                         drive.LiftLoop(),
-                        drive.BucketLoopAction(),
                         tab1Action
                         //lift.liftUp()
                 )
-
-//                trajectory2,
-////                drive.SetLiftTarget(0),
-//                        new ParallelAction(
-//                                drive.LiftLoop(),
-//                                trajectory3
-//
-//                )
         )
 
 
 
         );
-        // bucket.bucket.setPosition(1);
-//        Actions.runBlocking(
-//                new SleepAction(2)
-//        );
-//        bucket.bucket.setPosition(0.5);
-//        Actions.runBlocking(
-//                new SequentialAction(
-//                        trajectory2,
-//                        drive.SetLiftTarget(0),
-//                        new ParallelAction(
-//                            drive.LiftLoop(),
-//                            trajectory3
-//                        )
-//                )
-//        );
     }
     
 }

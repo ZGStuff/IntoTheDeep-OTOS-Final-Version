@@ -6,7 +6,7 @@ import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
-public class MeepMeepTesting {
+public class OneSampleSpecimenAutoMeepMeepWowThisIsLong {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
@@ -34,23 +34,23 @@ public class MeepMeepTesting {
                                 .splineToLinearHeading(new Pose2d(-55, 61, Math.toRadians(180)), Math.toRadians(90))
                                 .splineToLinearHeading(new Pose2d(-34, 56, Math.toRadians(180)), Math.toRadians(0))
                                 .setTangent(Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(-52, 23, Math.toRadians(180)), Math.toRadians(180))
+//                .splineToLinearHeading(new Pose2d(-52, 23, Math.toRadians(180)), Math.toRadians(180))
                                 .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(-55, 61, Math.toRadians(180)), Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(-34, 56, Math.toRadians(180)), Math.toRadians(0))
+//                .splineToLinearHeading(new Pose2d(-55, 61, Math.toRadians(180)), Math.toRadians(90))
+//                .splineToLinearHeading(new Pose2d(-34, 56, Math.toRadians(180)), Math.toRadians(0))
                                 .splineToLinearHeading(new Pose2d(-45, 61, Math.toRadians(270)), Math.toRadians(90))
-                //.strafeTo(new Vector2d(-42, 63))
-//                .setTangent(Math.toRadians(0))
-//                .lineToX(-32)
-//                .strafeTo(new Vector2d(-32, 24))
-//                .setTangent(Math.toRadians(0))
-//                .lineToX(-51)
-//                .strafeTo(new Vector2d(-51, 63))
-//                .setTangent(Math.toRadians(0))
-//                .lineToX(-45)
-//                .strafeTo(new Vector2d(-45, 59))
-//                .turn(Math.toRadians(90))
-                //.lineToY(63)
+                .strafeTo(new Vector2d(-42, 63))
+                .setTangent(Math.toRadians(0))
+                .lineToX(-32)
+                .strafeTo(new Vector2d(-32, 24))
+                .setTangent(Math.toRadians(0))
+                .lineToX(-51)
+                .strafeTo(new Vector2d(-51, 63))
+                .setTangent(Math.toRadians(0))
+                .lineToX(-45)
+                .strafeTo(new Vector2d(-45, 59))
+                .turn(Math.toRadians(90))
+                .lineToY(63)
 //                .afterTime(0.5, claw.closeClaw())
 //                .afterTime(1, drive.SetLiftTarget(-1968))
                 .waitSeconds(2)
@@ -61,19 +61,10 @@ public class MeepMeepTesting {
                                 .waitSeconds(2)
                         .setTangent(0)
                 .splineToLinearHeading(new Pose2d(-4, 29.5, Math.toRadians(90)), Math.toRadians(270))
-//
+
 //                .afterTime(0.5, drive.SetLiftTarget(-1328))
 //                .afterTime(1, claw.openClaw())
 //                .afterTime(2, drive.SetLiftTarget(0));
-
-//                                .strafeTo(new Vector2d(-52, 60))
-//                .strafeTo(new Vector2d(0, 34))
-//                .strafeTo(new Vector2d(-52, 60))
-//                .strafeTo(new Vector2d(0, 34))
-//                .strafeTo(new Vector2d(-52, 60))
-//                .strafeTo(new Vector2d(0, 34))
-
-//                        .waitSeconds(5)
 
 
 
