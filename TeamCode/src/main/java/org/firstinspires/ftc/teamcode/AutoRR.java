@@ -189,6 +189,7 @@ public class AutoRR extends LinearOpMode {
                 .waitSeconds(1.5)
                 .strafeTo(new Vector2d(51.5, 51))
                 .afterTime(0.5, drive.SetLiftTarget(0))
+                .afterTime(0.5, drive.LiftStop())
                 .setTangent(0)
                 .splineToSplineHeading(new Pose2d(36, 24, Math.toRadians(0)), Math.toRadians(270))
                 .splineToSplineHeading(new Pose2d(46, 10, Math.toRadians(0)), Math.toRadians(90))

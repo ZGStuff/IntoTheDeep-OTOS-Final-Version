@@ -23,10 +23,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
-@Autonomous(name = "AutoRR-TripleSpecimenB-NorthMap-Blue", group = "Autonomous")
+@Autonomous(name = "AutoRR-DoubleSpecimen-NorthMap-Red", group = "Autonomous")
 
 
-public class SpecimenRRTwo extends LinearOpMode {
+public class TwoSpecimenRRNorthRed extends LinearOpMode {
     // armBase class
     public class Lift {
         private DcMotorEx armBase;
@@ -223,14 +223,15 @@ public class SpecimenRRTwo extends LinearOpMode {
                 .setTangent(Math.toRadians(90))
                 .splineToLinearHeading(new Pose2d(-55, 54, Math.toRadians(180)), Math.toRadians(90))
                 .splineToLinearHeading(new Pose2d(-30, 52, Math.toRadians(180)), Math.toRadians(0))
+                .waitSeconds(1)
                 .setTangent(Math.toRadians(90))
 //                .splineToLinearHeading(new Pose2d(-52, 23, Math.toRadians(180)), Math.toRadians(180))
 //                .setTangent(Math.toRadians(90))
 //                .splineToLinearHeading(new Pose2d(-55, 59, Math.toRadians(180)), Math.toRadians(90))
                 // pushes sample number 2 into position
 //                .splineToLinearHeading(new Pose2d(-34, 56, Math.toRadians(180)), Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(-45, 58.5, Math.toRadians(270)), Math.toRadians(90))
-                .waitSeconds(0.5)
+                .splineToLinearHeading(new Pose2d(-45, 60, Math.toRadians(270)), Math.toRadians(90))
+                .waitSeconds(2)
                 .afterTime(0.25, claw.closeClaw())
                 .afterTime(0.75, drive.SetLiftTarget(-1968))
                 .waitSeconds(1.25)
@@ -240,18 +241,18 @@ public class SpecimenRRTwo extends LinearOpMode {
                 .afterTime(1, claw.openClaw())
                 .waitSeconds(1.75)
                 .afterTime(0, drive.SetLiftTarget(0))
-                .splineToSplineHeading(new Pose2d(-45, 59.5, Math.toRadians(270)), Math.toRadians(180))
-                .waitSeconds(0.5)
-                .afterTime(0.25, claw.closeClaw())
-                .afterTime(0.75, drive.SetLiftTarget(-1968))
-                .waitSeconds(1.25)
-                .setTangent(0)
-                .splineToLinearHeading(new Pose2d(-2, 32, Math.toRadians(90)), Math.toRadians(270))
-                .afterTime(0.5, drive.SetLiftTarget(-1328))
-                .afterTime(1, claw.openClaw())
-                .waitSeconds(1.75)
-                .afterTime(0, drive.SetLiftTarget(0))
-                .splineToSplineHeading(new Pose2d(-45, 59, Math.toRadians(270)), Math.toRadians(180));
+                .splineToSplineHeading(new Pose2d(-45, 60, Math.toRadians(270)), Math.toRadians(180));
+//                .waitSeconds(0.5)
+//                .afterTime(0.25, claw.closeClaw())
+//                .afterTime(0.75, drive.SetLiftTarget(-1968))
+//                .waitSeconds(1.25)
+//                .setTangent(0)
+//                .splineToLinearHeading(new Pose2d(-2, 32, Math.toRadians(90)), Math.toRadians(270))
+//                .afterTime(0.5, drive.SetLiftTarget(-1328))
+//                .afterTime(1, claw.openClaw())
+//                .waitSeconds(1.75)
+//                .afterTime(0, drive.SetLiftTarget(0))
+//                .splineToSplineHeading(new Pose2d(-45, 59, Math.toRadians(270)), Math.toRadians(180));
 
 
 

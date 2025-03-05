@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -15,10 +16,10 @@ import com.qualcomm.robotcore.hardware.Servo;
     @TeleOp(name = "TeleOpStuff")
     public class TeleOpStuff extends LinearOpMode {
 
-        private DcMotor frontLeft;
-        private DcMotor frontRight;
-        private DcMotor backLeft;
-        private DcMotor backRight;
+        private DcMotorEx frontLeft;
+        private DcMotorEx frontRight;
+        private DcMotorEx backLeft;
+        private DcMotorEx backRight;
         private DcMotor armBase;
         private DcMotor intakeSliderBase;
         // private ColorSensor colSense;
@@ -29,16 +30,17 @@ import com.qualcomm.robotcore.hardware.Servo;
         private Servo bucket;
         private Servo specimenEater;
         private DcMotor varmClaw;
+        private Servo sweepServo;
 
         // Init gamepad, motors + servo
 
         @Override
         public void runOpMode() {
             // Define all motors and servos
-            frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
-            frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-            backLeft = hardwareMap.get(DcMotor.class, "backLeft");
-            backRight = hardwareMap.get(DcMotor.class, "backRight");
+            frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
+            frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
+            backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
+            backRight = hardwareMap.get(DcMotorEx.class, "backRight");
             armBase = hardwareMap.get(DcMotor.class, "armBase");
             intakeSliderBase = hardwareMap.get(DcMotor.class, "intakeSliderBase");
 //            colSense = hardwareMap.get(ColorSensor.class, "colSense");
@@ -48,16 +50,21 @@ import com.qualcomm.robotcore.hardware.Servo;
             intakeServo3 = hardwareMap.get(DcMotor.class, "intakeMotor3");
             bucket = hardwareMap.get(Servo.class,"bucket");
             specimenEater = hardwareMap.get(Servo.class, "specimenEater");
+            sweepServo = hardwareMap.get(Servo.class, "sweepServo");
             //varmClaw = hardwareMap.get(DcMotor.class, "varmClaw");
             intakeSliderBase.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             intakeSliderBase.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             intakeServo3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             armBase.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             // Variables
             double ticks = 	537.7;
             int currentPos = armBase.getCurrentPosition();
             int otherPos = intakeSliderBase.getCurrentPosition();
-
+            boolean isStopped = false;
 
             // Put initialization blocks here.
             frontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -128,20 +135,32 @@ import com.qualcomm.robotcore.hardware.Servo;
                     armBase.setTargetPosition(-4370);
                     armBase.setPower(0.8);
                     armBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    isStopped = false;
                 // down
-                } else if (gamepad2.dpad_down) {
-                    armBase.setTargetPosition(0);
-                    armBase.setPower(0.8);
-                    armBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                } else if (gamepad2.left_trigger == 1) {
+                }  else if (gamepad2.left_trigger == 1) {
                     armBase.setTargetPosition(-1968);
                     armBase.setPower(0.8);
                     armBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    isStopped = false;
                 } else if (gamepad2.right_trigger == 1) {
                     armBase.setTargetPosition(-1327);
                     armBase.setPower(0.8);
                     armBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    isStopped = false;
+                } else if (gamepad2.dpad_down) {
+                    armBase.setTargetPosition(0);
+                    armBase.setPower(0.8);
+                    armBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    isStopped = false;
                 }
+                if ((Math.abs(armBase.getCurrentPosition()) <= 20) && (armBase.getTargetPosition() == 0) && (!isStopped)){
+                    armBase.setPower(0);
+                    isStopped = true;
+                }
+//                if (isStopped && Math.abs(armBase.getCurrentPosition()) >= 0) {
+//                    armBase.setPower(0);
+//                    isStopped = false;
+//                }
 //                if (gamepad2.dpad_up) {
 //                    if (currentPos < 1) {
 //                        armBase.setPower(0.85);
@@ -201,6 +220,12 @@ import com.qualcomm.robotcore.hardware.Servo;
                     specimenEater.setPosition(1);
                 } else if (gamepad1.y) {
                     specimenEater.setPosition(0);
+                }
+                // gamepad 2 sweep bar servo code wow
+                if (gamepad2.x) {
+                    sweepServo.setPosition(0.5);
+                } else if (gamepad2.y) {
+                    sweepServo.setPosition(1);
                 }
                // Gamepad 2 v-arm claw code
 //                if (gamepad2.a) {

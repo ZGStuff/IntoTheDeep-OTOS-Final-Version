@@ -23,10 +23,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
-@Autonomous(name = "AutoRR-TripleSpecimenB-NorthMap-Blue", group = "Autonomous")
+@Autonomous(name = "TheUltimateTripleSpecimen-AutoRR", group = "Autonomous")
 
 
-public class SpecimenRRTwo extends LinearOpMode {
+public class UltimateTripleSpecimen extends LinearOpMode {
     // armBase class
     public class Lift {
         private DcMotorEx armBase;
@@ -120,7 +120,7 @@ public class SpecimenRRTwo extends LinearOpMode {
         public class OpenClaw implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                specimenEater.setPosition(1.0);
+                specimenEater.setPosition(1);
                 return false;
             }
         }
@@ -171,96 +171,57 @@ public class SpecimenRRTwo extends LinearOpMode {
         int visionOutputPosition = 1;
         // actionBuilder builds from the drive steps passed to it
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
-//                .setTangent(Math.toRadians(0))
-//                .afterTime(0, drive.SetLiftTarget(-1968))
-//                .afterTime(0, claw.closeClaw())
-//                .splineToLinearHeading(new Pose2d(3.9, 30, Math.toRadians(90)), Math.toRadians(270))
-//                .afterTime(0.5, drive.SetLiftTarget(-1328))
-//                .afterTime(1, claw.openClaw())
-//                .afterTime(2, drive.SetLiftTarget(0))
-//                .waitSeconds(2.5)
-//                .setTangent(Math.toRadians(180))
-//                .splineTo(new Vector2d(-18, 40), Math.toRadians(180))
-//                .splineTo(new Vector2d(-32, 30), Math.toRadians(270))
-//                .setTangent(Math.toRadians(270))
-//                .splineToLinearHeading(new Pose2d(-42.1, 23, Math.toRadians(180)), Math.toRadians(180))
-//                .setTangent(Math.toRadians(90))
-//                .splineToLinearHeading(new Pose2d(-55, 61, Math.toRadians(180)), Math.toRadians(90))
-//                .splineToLinearHeading(new Pose2d(-34, 56, Math.toRadians(180)), Math.toRadians(0))
-//                .setTangent(Math.toRadians(270))
-//                .setTangent(Math.toRadians(90))
-//                .splineToLinearHeading(new Pose2d(-45, 61, Math.toRadians(270)), Math.toRadians(90))
-//                .afterTime(0.5, claw.closeClaw())
-//                .afterTime(1, drive.SetLiftTarget(-1968))
-//                .waitSeconds(2)
-//                .setTangent(0)
-//                .splineToLinearHeading(new Pose2d(0, 29.5, Math.toRadians(90)), Math.toRadians(270))
-//                .waitSeconds(2)
-//                .splineToSplineHeading(new Pose2d(-45, 61, Math.toRadians(270)), Math.toRadians(180))
-//                .waitSeconds(2)
-//                .setTangent(0)
-//                .splineToLinearHeading(new Pose2d(-4, 29.5, Math.toRadians(90)), Math.toRadians(270))
-//
-//                .afterTime(0.5, drive.SetLiftTarget(-1328))
-//                .afterTime(1, claw.openClaw())
-//                .afterTime(2, drive.SetLiftTarget(0));
-                // raises arm, moves to bar and closes claw
+                .afterTime(0, drive.SetBucketPos(0.5))
+                // initial hanging of specimen
                 .setTangent(Math.toRadians(0))
                 .afterTime(0, drive.SetLiftTarget(-1968))
                 .afterTime(0, claw.closeClaw())
-                .splineToLinearHeading(new Pose2d(5, 32, Math.toRadians(90)), Math.toRadians(270))
-                // hangs specimen and opens claw
-                .afterTime(0.5, drive.SetLiftTarget(-1328))
-                .afterTime(0.75, claw.openClaw())
-                .waitSeconds(1.25)
+                .splineToLinearHeading(new Pose2d(3.9, 31.5, Math.toRadians(90)), Math.toRadians(270))
+                .afterTime(0.25, drive.SetLiftTarget(-1328))
+                .afterTime(0.5, claw.openClaw())
+                .waitSeconds(0.75)
+
+                // obtain sample and move into observation zone
+                .setTangent(Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-32, 36, Math.toRadians(180)), Math.toRadians(180))
                 .afterTime(0, drive.SetLiftTarget(0))
-                .setTangent(Math.toRadians(180))
-                // splines to samples and pushes one
-                .splineTo(new Vector2d(-18, 40), Math.toRadians(180))
-                .splineTo(new Vector2d(-32, 30), Math.toRadians(270))
+                .splineToLinearHeading(new Pose2d(-33, 12, Math.toRadians(180)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-46, 13, Math.toRadians(180)), Math.toRadians(180))
+                .setTangent(Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-55, 50, Math.toRadians(180)), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-40, 49.5), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-35, 46, Math.toRadians(270)), Math.toRadians(0))
+                .waitSeconds(1)
+                .setTangent(Math.toRadians(0))
+                .setTangent(0)
+                .splineToConstantHeading(new Vector2d(-38.1, 55.25), Math.toRadians(90))
+                .waitSeconds(1.25)
+                .afterTime(0.25, claw.closeClaw())
+                .waitSeconds(0.5)
+//                .splineToConstantHeading(new Vector2d(-36, 54.5), Math.toRadians(90))
+                .afterTime(0, drive.SetLiftTarget(-1968))
                 .setTangent(Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(-42.1, 23, Math.toRadians(180)), Math.toRadians(180))
-                .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(-55, 54, Math.toRadians(180)), Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(-30, 52, Math.toRadians(180)), Math.toRadians(0))
-                .setTangent(Math.toRadians(90))
-//                .splineToLinearHeading(new Pose2d(-52, 23, Math.toRadians(180)), Math.toRadians(180))
-//                .setTangent(Math.toRadians(90))
-//                .splineToLinearHeading(new Pose2d(-55, 59, Math.toRadians(180)), Math.toRadians(90))
-                // pushes sample number 2 into position
-//                .splineToLinearHeading(new Pose2d(-34, 56, Math.toRadians(180)), Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(-45, 58.5, Math.toRadians(270)), Math.toRadians(90))
-                .waitSeconds(0.5)
-                .afterTime(0.25, claw.closeClaw())
-                .afterTime(0.75, drive.SetLiftTarget(-1968))
-                .waitSeconds(1.25)
-                .setTangent(0)
-                .splineToLinearHeading(new Pose2d(2, 32, Math.toRadians(90)), Math.toRadians(270))
-                .afterTime(0.5, drive.SetLiftTarget(-1328))
-                .afterTime(1, claw.openClaw())
-                .waitSeconds(1.75)
+                .splineToLinearHeading(new Pose2d(0, 31.5, Math.toRadians(90)), Math.toRadians(270))
+                .afterTime(0.25, drive.SetLiftTarget(-1328))
+                .afterTime(0.5, claw.openClaw())
+                .waitSeconds(0.75)
                 .afterTime(0, drive.SetLiftTarget(0))
-                .splineToSplineHeading(new Pose2d(-45, 59.5, Math.toRadians(270)), Math.toRadians(180))
-                .waitSeconds(0.5)
-                .afterTime(0.25, claw.closeClaw())
-                .afterTime(0.75, drive.SetLiftTarget(-1968))
+                .setTangent(Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-35, 46, Math.toRadians(270)), Math.toRadians(90))
+                .setTangent(Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-38.1, 55.25), Math.toRadians(90))
                 .waitSeconds(1.25)
-                .setTangent(0)
-                .splineToLinearHeading(new Pose2d(-2, 32, Math.toRadians(90)), Math.toRadians(270))
-                .afterTime(0.5, drive.SetLiftTarget(-1328))
-                .afterTime(1, claw.openClaw())
-                .waitSeconds(1.75)
-                .afterTime(0, drive.SetLiftTarget(0))
-                .splineToSplineHeading(new Pose2d(-45, 59, Math.toRadians(270)), Math.toRadians(180));
-
-
-
+                .afterTime(0.25, claw.closeClaw())
+                .waitSeconds(0.5)
+//                .splineToConstantHeading(new Vector2d(-36, 54.5), Math.toRadians(90))
+                .afterTime(0, drive.SetLiftTarget(-1968))
+                .setTangent(Math.toRadians(270))
+                .splineToLinearHeading(new Pose2d(-4, 31.5, Math.toRadians(90)), Math.toRadians(270))
+                .afterTime(0.25, drive.SetLiftTarget(-1328))
+                .afterTime(0.5, claw.openClaw())
+                .waitSeconds(0.75)
+                .afterTime(0, drive.SetLiftTarget(0));
         Action tab1Action = tab1.build();
-        TrajectoryActionBuilder traj2 = tab1.endTrajectory().fresh()
-                .strafeTo(new Vector2d(51.5, 51));
-        Action trajectory2 = traj2.build();
-        TrajectoryActionBuilder traj3 = traj2.endTrajectory().fresh();
-        Action trajectory3 = traj3.build();
         while (!isStopRequested() && !opModeIsActive()) {
             int position = visionOutputPosition;
             telemetry.addData("Position during Init", position);
@@ -284,17 +245,17 @@ public class SpecimenRRTwo extends LinearOpMode {
 //                        trajectoryActionChosen,
 //                        trajectoryActionCloseOut
 //                )
-        new SequentialAction(
-                new ParallelAction(
-                        drive.LiftLoop(),
-                        tab1Action
-                        //lift.liftUp()
+                new SequentialAction(
+                        new ParallelAction(
+                                drive.LiftLoop(),
+                                tab1Action
+                                //lift.liftUp()
+                        )
                 )
-        )
 
 
 
         );
     }
-    
+
 }

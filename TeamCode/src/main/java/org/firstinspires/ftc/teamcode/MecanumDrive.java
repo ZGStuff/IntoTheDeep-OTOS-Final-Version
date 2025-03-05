@@ -390,6 +390,13 @@ public class MecanumDrive {
             return true;
         }
     }
+    public class LiftStopLoop implements Action {
+        @Override
+        public boolean run (@NonNull TelemetryPacket p) {
+            vArmBase.setPower(0);
+            return true;
+        }
+    }
     public Action BucketLoopAction() {
         return new BucketLoop();
     }
@@ -400,6 +407,9 @@ public class MecanumDrive {
 
     public Action LiftLoop() {
         return new LiftUpLoop();
+    }
+    public Action LiftStop() {
+        return new LiftStopLoop();
     }
 
     public Action SetLiftTarget(int targetPos) {
