@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -9,11 +10,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
-
-
-    @TeleOp(name = "TeleOpStuff")
+@TeleOp(name = "TeleOpStuff")
     public class TeleOpStuff extends LinearOpMode {
 
         private DcMotorEx frontLeft;
@@ -31,6 +33,7 @@ import com.qualcomm.robotcore.hardware.Servo;
         private Servo specimenEater;
         private DcMotor varmClaw;
         private Servo sweepServo;
+    private DigitalChannel limitSwitch;
 
         // Init gamepad, motors + servo
 
@@ -51,6 +54,7 @@ import com.qualcomm.robotcore.hardware.Servo;
             bucket = hardwareMap.get(Servo.class,"bucket");
             specimenEater = hardwareMap.get(Servo.class, "specimenEater");
             sweepServo = hardwareMap.get(Servo.class, "sweepServo");
+            limitSwitch = hardwareMap.get(DigitalChannel.class, "limitSwitch");
             //varmClaw = hardwareMap.get(DcMotor.class, "varmClaw");
             intakeSliderBase.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             intakeSliderBase.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -60,11 +64,14 @@ import com.qualcomm.robotcore.hardware.Servo;
             frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            limitSwitch.setMode(DigitalChannel.Mode.INPUT);
             // Variables
             double ticks = 	537.7;
             int currentPos = armBase.getCurrentPosition();
             int otherPos = intakeSliderBase.getCurrentPosition();
             boolean isStopped = false;
+            FtcDashboard dashboard = FtcDashboard.getInstance();
+            Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
             // Put initialization blocks here.
             frontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -88,7 +95,14 @@ import com.qualcomm.robotcore.hardware.Servo;
                 telemetry.addData("encoder position of the intake!!!!", otherPos);
                 telemetry.addData("intake motor 2 pos", intakeServo3.getCurrentPosition());
                 telemetry.addData("LiftPos: ", armBase.getCurrentPosition());
+                telemetry.addData("Limit Switch", limitSwitch.getState() ? "Pressed" : "Not Pressed");
                 telemetry.update();
+                dashboardTelemetry.addData("encoder position of intake", otherPos);
+                dashboardTelemetry.addData("other intake motor pos", intakeServo3.getCurrentPosition());
+                dashboardTelemetry.addData("Lift position", armBase.getCurrentPosition());
+                dashboardTelemetry
+                        .addData("Limit Switch", limitSwitch.getState() ? "Pressed" : "Not Pressed");
+                dashboardTelemetry.update();
                 // Gamepad movement code
                 double drive = -gamepad1.left_stick_y;
                 double strafe = gamepad1.left_stick_x;
@@ -153,10 +167,13 @@ import com.qualcomm.robotcore.hardware.Servo;
                     armBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     isStopped = false;
                 }
-                if ((Math.abs(armBase.getCurrentPosition()) <= 20) && (armBase.getTargetPosition() == 0) && (!isStopped)){
-                    armBase.setPower(0);
-                    isStopped = true;
+                if (limitSwitch.getState() && armBase.getTargetPosition() == 0){  // If the limit switch is pressed (high signal)
+                    armBase.setPower(0);  // Stop the motor
                 }
+//                if ((Math.abs(armBase.getCurrentPosition()) <= 20) && (armBase.getTargetPosition() == 0) && (!isStopped)){
+//                    armBase.setPower(0);
+//                    isStopped = true;
+//                }
 //                if (isStopped && Math.abs(armBase.getCurrentPosition()) >= 0) {
 //                    armBase.setPower(0);
 //                    isStopped = false;
@@ -180,7 +197,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 //               }
                // gp2 intake servo code the third
                 if (gamepad2.a) {
-                    intakeServo3.setTargetPosition(-1461);
+                    intakeServo3.setTargetPosition(-1554);
                     intakeServo3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     intakeServo3.setPower(0.5);
                 } else if (gamepad2.b) {
@@ -191,7 +208,7 @@ import com.qualcomm.robotcore.hardware.Servo;
                // Gamepad 2 intake slider movement code
                 if (gamepad2.dpad_right) {
                     if (otherPos > -2610) {
-                        intakeSliderBase.setPower(0.4);
+                        intakeSliderBase.setPower(0.8);
                     }
                 } else if (gamepad2.dpad_left) {
                     if (otherPos < 1) {
@@ -221,11 +238,11 @@ import com.qualcomm.robotcore.hardware.Servo;
                 } else if (gamepad1.y) {
                     specimenEater.setPosition(0);
                 }
-                // gamepad 2 sweep bar servo code wow
-                if (gamepad2.x) {
+                // gamepad 1 sweep bar servo code wow
+                if (gamepad1.right_stick_button) {
+                    sweepServo.setPosition(0);
+                } else {
                     sweepServo.setPosition(0.5);
-                } else if (gamepad2.y) {
-                    sweepServo.setPosition(1);
                 }
                // Gamepad 2 v-arm claw code
 //                if (gamepad2.a) {

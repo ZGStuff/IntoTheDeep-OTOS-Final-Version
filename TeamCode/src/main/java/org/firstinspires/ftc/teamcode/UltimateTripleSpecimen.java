@@ -109,7 +109,7 @@ public class UltimateTripleSpecimen extends LinearOpMode {
         public class CloseClaw implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                specimenEater.setPosition(0);
+                specimenEater.setPosition(0.5);
                 return false;
             }
         }
@@ -177,24 +177,24 @@ public class UltimateTripleSpecimen extends LinearOpMode {
                 .afterTime(0, drive.SetLiftTarget(-1968))
                 .afterTime(0, claw.closeClaw())
                 .splineToLinearHeading(new Pose2d(3.9, 31.5, Math.toRadians(90)), Math.toRadians(270))
-                .afterTime(0.25, drive.SetLiftTarget(-1328))
-                .afterTime(0.5, claw.openClaw())
-                .waitSeconds(0.75)
+                .afterTime(0.5, drive.SetLiftTarget(-1328))
+                .afterTime(0.75, claw.openClaw())
+                .waitSeconds(1.25)
 
                 // obtain sample and move into observation zone
                 .setTangent(Math.toRadians(90))
                 .splineToLinearHeading(new Pose2d(-32, 36, Math.toRadians(180)), Math.toRadians(180))
                 .afterTime(0, drive.SetLiftTarget(0))
-                .splineToLinearHeading(new Pose2d(-33, 12, Math.toRadians(180)), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-46, 13, Math.toRadians(180)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-32.1, 12, Math.toRadians(180)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-44, 13, Math.toRadians(180)), Math.toRadians(180))
                 .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(-55, 50, Math.toRadians(180)), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-47 , 47, Math.toRadians(180)), Math.toRadians(90))
                 .splineToConstantHeading(new Vector2d(-40, 49.5), Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-35, 46, Math.toRadians(270)), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-35, 42, Math.toRadians(270)), Math.toRadians(0))
                 .waitSeconds(1)
                 .setTangent(Math.toRadians(0))
                 .setTangent(0)
-                .splineToConstantHeading(new Vector2d(-38.1, 55.25), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-38.1, 58), Math.toRadians(90))
                 .waitSeconds(1.25)
                 .afterTime(0.25, claw.closeClaw())
                 .waitSeconds(0.5)
@@ -209,7 +209,7 @@ public class UltimateTripleSpecimen extends LinearOpMode {
                 .setTangent(Math.toRadians(90))
                 .splineToLinearHeading(new Pose2d(-35, 46, Math.toRadians(270)), Math.toRadians(90))
                 .setTangent(Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(-38.1, 55.25), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-38.1, 58), Math.toRadians(90))
                 .waitSeconds(1.25)
                 .afterTime(0.25, claw.closeClaw())
                 .waitSeconds(0.5)
