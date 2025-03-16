@@ -238,7 +238,7 @@ public class AutoRR_2HB_NR extends LinearOpMode {
                 .afterTime(4.25, drive.SetLiftTarget(-4385))
 
                 .waitSeconds(6)
-                .strafeTo(new Vector2d(59.5, 63))
+                .strafeTo(new Vector2d(58, 63))
                 .afterTime(1, drive.SetBucketPos(1))
                 .afterTime(2, drive.SetBucketPos(0.5))
                 .waitSeconds(2)
@@ -257,7 +257,7 @@ public class AutoRR_2HB_NR extends LinearOpMode {
                 .afterTime(4.25, drive.SetLiftTarget(-4385))
 
                 .waitSeconds(6)
-                .strafeTo(new Vector2d(59.5, 63))
+                .strafeTo(new Vector2d(58, 63))
                 .afterTime(1, drive.SetBucketPos(1))
                 .afterTime(2, drive.SetBucketPos(0.5))
                 .waitSeconds(2);
