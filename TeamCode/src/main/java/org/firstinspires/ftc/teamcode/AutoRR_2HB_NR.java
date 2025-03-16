@@ -163,8 +163,8 @@ public class AutoRR_2HB_NR extends LinearOpMode {
         private CRServo intakeServo1;
         private CRServo intakeServo2;
         public Intake(HardwareMap hardwareMap) {
-            intakeServo1 = hardwareMap.get(CRServo.class, "intakeServo1");
-            intakeServo2 = hardwareMap.get(CRServo.class, "intakeServo2");
+            intakeServo1 = hardwareMap.get(CRServo.class, "theServo");
+            intakeServo2 = hardwareMap.get(CRServo.class, "theUpAndDownServo");
         }
         public class IntakeIn implements Action {
             @Override
@@ -181,7 +181,7 @@ public class AutoRR_2HB_NR extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 intakeServo1.setPower(-0.45);
-                intakeServo2.setPower(-0.45);
+                intakeServo2.setPower(0.45);
                 return false;
             }
         }
@@ -214,43 +214,37 @@ public class AutoRR_2HB_NR extends LinearOpMode {
         int visionOutputPosition = 1;
         // actionBuilder builds from the drive steps passed to it
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
-//                .waitSeconds(5)
-//                .strafeTo(new Vector2d(-34, 50));
-//                .turn(Math.toRadians(180))
-//        .lineToX(-24)
-//                .turn(Math.toRadians(180));
                 .afterTime(0, drive.SetBucketPos(0.5))
                 .splineTo(new Vector2d(52,57), Math.toRadians(-45))
-                //.afterTime(0, drive.SetLiftTarget(-4385))
+                .afterTime(0, drive.SetLiftTarget(-4385))
                 .waitSeconds(2)
                 .setTangent(0)
                 .splineToLinearHeading(new Pose2d(59.5,63, Math.toRadians(-67.5)), Math.toRadians(67.5))
-                //.afterTime(1, drive.SetBucketPos(1))
-                //.afterTime(1.5, drive.SetBucketPos(0.5))
-                .waitSeconds(1.5)
-                .strafeTo(new Vector2d(51.5, 51))
-                //.afterTime(0.5, drive.SetLiftTarget(0))
-                .turn(Math.toRadians(-28))
+                .afterTime(1, drive.SetBucketPos(1))
+                .afterTime(2, drive.SetBucketPos(0.5))
+                .waitSeconds(2)
+                .strafeTo(new Vector2d(59.5, 50))
+                .afterTime(0.5, drive.SetLiftTarget(0))
+                .afterTime(0.5, drive.SetIntakeDropdownTarget(-1554))
+                .afterTime(0.5, intakeServos.intakeIn())
+                .turn(Math.toRadians(-43))
+                .waitSeconds(2)
+                .strafeTo(new Vector2d(50.5, 30))
+                .afterTime(3, intakeServos.intakeStop())
+                .afterTime(3, drive.SetIntakeDropdownTarget(0))
+                .turn(Math.toRadians(43))
+                .afterTime(3.25, intakeServos.intakeOut())
+                .afterTime(3.75, intakeServos.intakeStop())
+                .afterTime(4.25, drive.SetLiftTarget(-4385))
 
-                .afterTime(0, drive.SetIntakeDropdownTarget(-1554))
-                .afterTime(0.25, drive.SetIntakeLiftTarget(-1300))
-                .afterTime(0.25, intakeServos.intakeIn())
-                .afterTime(1, intakeServos.intakeStop())
-                .afterTime(1, drive.SetIntakeLiftTarget(0))
-                .afterTime(1, drive.SetIntakeDropdownTarget(0))
-                .afterTime(1.75, intakeServos.intakeOut())
-                .afterTime(2.25, intakeServos.intakeStop())
-                .afterTime(2.5, drive.SetLiftTarget(-4385))
-                .waitSeconds(3)
-                .turn(Math.toRadians(28))
+                .waitSeconds(6)
                 .strafeTo(new Vector2d(59.5, 63))
                 .afterTime(1, drive.SetBucketPos(1))
-                .afterTime(1.5, drive.SetBucketPos(0.5))
-                .waitSeconds(1.5)
-                .strafeTo(new Vector2d(51.5, 51))
-                .afterTime(0.5, drive.SetLiftTarget(0))
-                .turn(Math.toRadians(-11));
-//                .afterTime(0, drive.SetIntakeLiftTarget(-1300))
+                .afterTime(2, drive.SetBucketPos(0.5))
+                .waitSeconds(2);
+//                .strafeTo(new Vector2d(51.5, 51))
+//                .afterTime(0.5, drive.SetLiftTarget(0))
+//                .turn(Math.toRadians(-11))
 //                .afterTime(0, drive.SetIntakeDropdownTarget(-1406))
 //                //.afterTime(0, )
 //                .afterTime(0, drive.SetLiftTarget(-4385))
@@ -350,6 +344,7 @@ public class AutoRR_2HB_NR extends LinearOpMode {
                 new ParallelAction(
                         drive.LiftLoop(),
                         drive.BucketLoopAction(),
+                        drive.IntakeDropdownLoop(),
                         tab1Action
                         //lift.liftUp()
                 )

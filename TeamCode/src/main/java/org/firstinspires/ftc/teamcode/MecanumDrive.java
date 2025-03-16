@@ -112,7 +112,7 @@ public class MecanumDrive {
     public final AccelConstraint defaultAccelConstraint =
             new ProfileAccelConstraint(PARAMS.minProfileAccel, PARAMS.maxProfileAccel);
 
-    public final DcMotorEx leftFront, leftBack, rightBack, rightFront, vArmBase, intakeSliderBase, intakeDropdownMotor;
+    public final DcMotorEx leftFront, leftBack, rightBack, rightFront, vArmBase, intakeDropdownMotor;
 
     public final Servo bucket;
 
@@ -230,16 +230,14 @@ public class MecanumDrive {
         leftBack = hardwareMap.get(DcMotorEx.class, "backLeft");
         rightBack = hardwareMap.get(DcMotorEx.class, "backRight");
         rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
-        vArmBase = hardwareMap.get(DcMotorEx.class, "armBase");
-        intakeSliderBase = hardwareMap.get(DcMotorEx.class, "intakeSliderBase");
-        intakeDropdownMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor3");
+        vArmBase = hardwareMap.get(DcMotorEx.class, "armBase");intakeDropdownMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor3");
         bucket = hardwareMap.get(Servo.class, "bucket");
         vArmBase.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         vArmBase.setTargetPosition(PARAMS.slideTargetPos);
         vArmBase.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        intakeSliderBase.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        intakeSliderBase.setTargetPosition(PARAMS.intakeSlideTargetPos);
-        intakeSliderBase.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+    intakeDropdownMotor.setTargetPosition(PARAMS.intakeDropdownPos);
+    intakeDropdownMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -249,7 +247,6 @@ public class MecanumDrive {
         // TODO: reverse motor directions if needed
            leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
            leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
-
         // TODO: make sure your config has an IMU with this name (can be BNO or BHI)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
         lazyImu = new LazyImu(hardwareMap, "imu", new RevHubOrientationOnRobot(
@@ -404,30 +401,17 @@ public class MecanumDrive {
             return true;
         }
     }
-    public class IntakeLiftOutLoop implements Action {
-        @Override
-        public boolean run (@NonNull TelemetryPacket p) {
-            intakeSliderBase.setTargetPosition(PARAMS.intakeDropdownPos);
-            intakeSliderBase.setPower(1);
-            return true;
-        }
-    }
-    public class IntakeLiftInLoop implements Action {
-        @Override
-        public boolean run (@NonNull TelemetryPacket p) {
-            intakeSliderBase.setPower(0);
-            return true;
-        }
-    }
+
     public class IntakeDropDownAndRaise implements Action {
         @Override
         public boolean run (@NonNull TelemetryPacket p) {
-            intakeDropdownMotor.setTargetPosition(PARAMS.slideTargetPos);
+            intakeDropdownMotor.setTargetPosition(PARAMS.intakeDropdownPos);
             intakeDropdownMotor.setPower(1);
+
             return true;
         }
     }
-    public class IntakeRaiseUp implements Action {
+    public class IntakeStop implements Action {
         @Override
         public boolean run (@NonNull TelemetryPacket p) {
             intakeDropdownMotor.setPower(0);
@@ -447,6 +431,12 @@ public class MecanumDrive {
     }
     public Action LiftStop() {
         return new LiftStopLoop();
+    }
+    public Action IntakeDropdownLoop() {
+        return new IntakeDropDownAndRaise();
+    }
+    public Action IntakeDropdownStop() {
+        return new IntakeStop();
     }
 
     public Action SetLiftTarget(int targetPos) {

@@ -234,7 +234,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
                 }
                 // gamepad 1 specimen
                 if (gamepad1.x) {
-                    specimenEater.setPosition(1);
+                    specimenEater.setPosition(0.5);
                 } else if (gamepad1.y) {
                     specimenEater.setPosition(0);
                 }
