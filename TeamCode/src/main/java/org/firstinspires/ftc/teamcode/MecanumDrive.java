@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -90,6 +91,11 @@ public class MecanumDrive {
         public double axialVelGain = 0.0;
         public double lateralVelGain = 0.0;
         public double headingVelGain = 0.0; // shared with turn
+
+        public int slideTargetPos = 0;
+        public int intakeSlideTargetPos = 0;
+        public int intakeDropdownPos = 0;
+        public double bucketTargetPos = 0.5;
     }
 
     public static Params PARAMS = new Params();
@@ -107,7 +113,9 @@ public class MecanumDrive {
     public final AccelConstraint defaultAccelConstraint =
             new ProfileAccelConstraint(PARAMS.minProfileAccel, PARAMS.maxProfileAccel);
 
-    public final DcMotorEx leftFront, leftBack, rightBack, rightFront;
+    public final DcMotorEx leftFront, leftBack, rightBack, rightFront, vArmBase, intakeDropdownMotor;
+
+    public final Servo bucket;
 
     public final VoltageSensor voltageSensor;
 
@@ -218,10 +226,18 @@ public class MecanumDrive {
 
         // TODO: make sure your config has motors with these names (or change them)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
-        leftFront = hardwareMap.get(DcMotorEx.class, "left_front");
-        leftBack = hardwareMap.get(DcMotorEx.class, "left_back");
-        rightBack = hardwareMap.get(DcMotorEx.class, "right_back");
-        rightFront = hardwareMap.get(DcMotorEx.class, "right_front");
+        leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
+        leftBack = hardwareMap.get(DcMotorEx.class, "backLeft");
+        rightBack = hardwareMap.get(DcMotorEx.class, "backRight");
+        rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
+        vArmBase = hardwareMap.get(DcMotorEx.class, "armBase");intakeDropdownMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor3");
+        bucket = hardwareMap.get(Servo.class, "bucket");
+        vArmBase.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        vArmBase.setTargetPosition(PARAMS.slideTargetPos);
+        vArmBase.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+    intakeDropdownMotor.setTargetPosition(PARAMS.intakeDropdownPos);
+    intakeDropdownMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -362,6 +378,78 @@ public class MecanumDrive {
             c.strokePolyline(xPoints, yPoints);
         }
     }
+
+    public class BucketLoop implements Action {
+        @Override
+        public boolean run (@NonNull TelemetryPacket p) {
+            bucket.setPosition(PARAMS.bucketTargetPos);
+            return true;
+        }
+    }
+
+    public class LiftUpLoop implements Action {
+        @Override
+        public boolean run (@NonNull TelemetryPacket p) {
+            vArmBase.setTargetPosition(PARAMS.slideTargetPos);
+            vArmBase.setPower(1);
+            return true;
+        }
+    }
+    public class LiftStopLoop implements Action {
+        @Override
+        public boolean run (@NonNull TelemetryPacket p) {
+            vArmBase.setPower(0);
+            return true;
+        }
+    }
+
+    public class IntakeDropDownAndRaise implements Action {
+        @Override
+        public boolean run (@NonNull TelemetryPacket p) {
+            intakeDropdownMotor.setTargetPosition(PARAMS.intakeDropdownPos);
+            intakeDropdownMotor.setPower(1);
+
+            return true;
+        }
+    }
+    public class IntakeStop implements Action {
+        @Override
+        public boolean run (@NonNull TelemetryPacket p) {
+            intakeDropdownMotor.setPower(0);
+            return true;
+        }
+    }
+    public Action BucketLoopAction() {
+        return new BucketLoop();
+    }
+
+    public Action SetBucketPos (double bucketPos) {
+        return new InstantAction(() -> PARAMS.bucketTargetPos = bucketPos);
+    }
+
+    public Action LiftLoop() {
+        return new LiftUpLoop();
+    }
+    public Action LiftStop() {
+        return new LiftStopLoop();
+    }
+    public Action IntakeDropdownLoop() {
+        return new IntakeDropDownAndRaise();
+    }
+    public Action IntakeDropdownStop() {
+        return new IntakeStop();
+    }
+
+    public Action SetLiftTarget(int targetPos) {
+        return new InstantAction(() -> PARAMS.slideTargetPos = targetPos);
+    }
+    public Action SetIntakeLiftTarget(int otherTargetPos) {
+        return new InstantAction(() -> PARAMS.intakeSlideTargetPos = otherTargetPos);
+    }
+    public Action SetIntakeDropdownTarget (int finalTargetPos) {
+        return new InstantAction(() -> PARAMS.intakeDropdownPos = finalTargetPos);
+    }
+
 
     public final class TurnAction implements Action {
         private final TimeTurn turn;
