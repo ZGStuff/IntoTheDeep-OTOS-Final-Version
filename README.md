@@ -1,3 +1,14 @@
+# This code is no longer getting updated.
+
+This is from a previous season, and as such, will not be:
+
+- Accepting pull requests
+- Fixing issues
+- Updated to the latest FIRST Tech Challenge SDK
+- Updated *at all*
+
+Please look at: https://github.com/CyberEaglesTitanium/Decode-PedroPathing-OTOS (once it's up, of course) for the latest version of our robot's code.
+
 # Localization Sensor Quickstart for Road Runner 1.0
 
 There are currently three standalone localization sensors availiable for FTC Teams:
